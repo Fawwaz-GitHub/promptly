@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f3f1ff;
+  --color-brand-100: #e9e5ff;
+  --color-brand-200: #d5cdff;
+  --color-brand-500: #7c5cff;
+  --color-brand-600: #6a45f5;
+  --color-brand-700: #5932d9;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html { -webkit-font-smoothing: antialiased; }
+body { @apply bg-slate-50 text-slate-900; }
+
+.diff-add { @apply bg-emerald-100 text-emerald-900 rounded px-0.5; }
+.diff-del { @apply bg-rose-100 text-rose-800 line-through rounded px-0.5; }

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <img src="icons/48.png" width="28" height="28" alt="" />
+    <div>
+      <div class="name">Promptly</div>
+      <div class="sub" id="status">Loading…</div>
+    </div>
+  </header>
+
+  <section class="card">
+    <label class="row">
+      <span><b>Promptly</b><small>Show the ✨ button in text boxes</small></span>
+      <input type="checkbox" id="enabled" class="switch" />
+    </label>
+    <label class="row" id="siteRow">
+      <span><b id="siteName">This site</b><small>Enable on this site</small></span>
+      <input type="checkbox" id="siteEnabled" class="switch" />
+    </label>
+    <label class="row">
+      <span><b>Mode</b></span>
+      <select id="mode"></select>
+    </label>
+  </section>
+
+  <section class="card" id="account">
+    <div id="usage" class="usage"></div>
+    <button id="login" class="btn primary" hidden>Sign in with email — unlimited & free</button>
+    <div id="signedIn" hidden class="signed">
+      <span id="email"></span>
+      <button id="signout" class="link">Sign out</button>
+    </div>
+  </section>
+
+  <details>
+    <summary>Advanced</summary>
+    <label class="field">Server URL
+      <input id="apiBase" type="url" placeholder="https://your-app.vercel.app" />
+    </label>
+    <button id="saveApi" class="btn">Save</button>
+  </details>
+
+  <footer><a id="openApp" href="#">Open web editor ↗</a><span>Alt+Shift+P</span></footer>
+  <script src="popup.js"></script>
+</body>
+</html>
