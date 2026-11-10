@@ -76,7 +76,7 @@ npm run build
 Create **two Vercel projects from this same GitHub repo** at [vercel.com/new](https://vercel.com/new). Enter keys only in the Vercel dashboard (Project → Settings → Environment Variables).
 
 **1. API project (FastAPI)**
-- Import the repo and set **Root Directory** to `backend`. Vercel detects Python and runs `index.py` (configured in `backend/vercel.json`).
+- Import the repo and set **Root Directory** to `backend`. Vercel detects FastAPI and serves the `app` exported from `backend/index.py`.
 - Environment variables: `OPENROUTER_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `FRONTEND_URL`. `FRONTEND_URL` is your web URL; separate several with commas, for example production and preview.
 - **Supabase is required here.** Vercel functions are serverless, so the in-memory fallback resets between requests and the 5-refinement guest limit would not hold.
 - After deploying, check `https://<api-project>.vercel.app/health`.
@@ -88,10 +88,11 @@ Create **two Vercel projects from this same GitHub repo** at [vercel.com/new](ht
 
 **3. Supabase:** in Auth → URL Configuration, set Site URL to the web URL and add `https://<web-project>.vercel.app/login` to Redirect URLs.
 
-**4. Extension:** rebuild it against production:
+**4. Extension (free, no Chrome Web Store):** build the downloadable zip against your live URLs:
 ```bash
-cd extension && PROMPTLY_API_BASE=https://<api-project>.vercel.app PROMPTLY_SITE_BASE=https://<web-project>.vercel.app npm run build
+cd extension && PROMPTLY_API_BASE=https://<api-project>.vercel.app PROMPTLY_SITE_BASE=https://<web-project>.vercel.app npm run release
 ```
+This writes `web/public/promptly-extension.zip`. Commit it and redeploy the web project. Visitors download it from the website's `/extension` page and install it with **Load unpacked**; the page has step-by-step instructions.
 
 ## Other hosts
 - **Backend:** any Python host (Render, Railway, Fly.io) or Docker. `backend/Dockerfile` runs `uvicorn` on `$PORT`.

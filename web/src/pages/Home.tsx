@@ -16,9 +16,9 @@ export default function Home() {
           <Link to="/app" className="rounded-xl bg-brand-600 px-5 py-3 font-medium text-white shadow-sm hover:bg-brand-700">
             Try Promptly free
           </Link>
-          <a href="#extension" className="rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium hover:bg-slate-50">
+          <Link to="/extension" className="rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium hover:bg-slate-50">
             Get the Chrome extension
-          </a>
+          </Link>
         </div>
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-4 text-left md:grid-cols-2">
@@ -57,10 +57,13 @@ export default function Home() {
             Click the ✨ button that appears on any text box, review the rewrite, and replace your text in one click. Turn it off globally or per site from the toolbar popup.
           </p>
           <ol className="mt-5 list-decimal space-y-1 pl-5 text-sm text-slate-300">
-            <li>Open <code className="rounded bg-white/10 px-1">chrome://extensions</code> and enable Developer mode</li>
-            <li>Click “Load unpacked” and select the <code className="rounded bg-white/10 px-1">extension/dist</code> folder</li>
-            <li>Pin Promptly and sign in from the popup for unlimited use</li>
+            <li>Download the zip and unzip it</li>
+            <li>Open <code className="rounded bg-white/10 px-1">chrome://extensions</code>, enable Developer mode, click “Load unpacked” and pick the folder</li>
+            <li>Pin Promptly and start improving prompts</li>
           </ol>
+          <Link to="/extension" className="mt-6 inline-block rounded-xl bg-white px-5 py-3 font-medium text-slate-900 hover:bg-slate-100">
+            Download &amp; install guide
+          </Link>
         </div>
       </section>
 

@@ -7,3 +7,5 @@ dist
 .venv/
 __pycache__/
 .pytest_cache/
+.vercel
+!web/public/promptly-extension.zip

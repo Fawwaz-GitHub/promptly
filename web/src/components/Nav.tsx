@@ -12,6 +12,7 @@ export function Nav() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <Link to="/app" className="rounded-lg px-3 py-1.5 text-slate-600 hover:bg-slate-100">Editor</Link>
+          <Link to="/extension" className="rounded-lg px-3 py-1.5 text-slate-600 hover:bg-slate-100">Extension</Link>
           <Link to="/pricing" className="hidden rounded-lg px-3 py-1.5 text-slate-600 hover:bg-slate-100 sm:block">Pricing</Link>
           {authEnabled &&
             (session ? (
