@@ -27,6 +27,11 @@ class Settings(BaseSettings):
         return bool(self.supabase_url and self.supabase_service_role_key and "your-project" not in self.supabase_url)
 
     @property
+    def frontend_urls(self) -> list[str]:
+        """FRONTEND_URL may list several origins, comma-separated (e.g. prod + preview)."""
+        return [o.strip().rstrip("/") for o in self.frontend_url.split(",") if o.strip()]
+
+    @property
     def models(self) -> list[str]:
         fallbacks = [m.strip() for m in self.openrouter_fallback_models.split(",") if m.strip()]
         return [self.openrouter_model] + [m for m in fallbacks if m != self.openrouter_model]

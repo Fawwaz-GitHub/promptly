@@ -42,7 +42,7 @@ async def refine_prompt(text: str, mode: str, settings: Settings, client: httpx.
             f"{settings.openrouter_base_url.rstrip('/')}/chat/completions",
             headers={
                 "Authorization": f"Bearer {settings.openrouter_api_key}",
-                "HTTP-Referer": settings.frontend_url,
+                "HTTP-Referer": (settings.frontend_urls or ["http://localhost:3000"])[0],
                 "X-Title": "Promptly",
             },
             json={

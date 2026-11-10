@@ -1,3 +1,5 @@
+import logging
+import os
 import re
 from contextlib import asynccontextmanager
 
@@ -20,12 +22,17 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    if os.environ.get("VERCEL") and not settings.supabase_enabled:
+        logging.getLogger("promptly").warning(
+            "Running on Vercel without Supabase: usage limits are kept in memory and reset "
+            "between serverless invocations. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+        )
     app = FastAPI(title="Promptly API", version="0.2.0", lifespan=lifespan)
 
     ext = re.escape(settings.extension_id) if settings.extension_id else "[a-p]{32}"
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[o.strip().rstrip("/") for o in settings.frontend_url.split(",") if o.strip()],
+        allow_origins=settings.frontend_urls,
         allow_origin_regex=rf"^chrome-extension://{ext}$",
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization", "X-Device-Id"],

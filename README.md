@@ -72,10 +72,30 @@ npm run build
 | web | `VITE_API_URL` | backend URL |
 | web | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | browser sign-in (public values) |
 
-## Deploy
-- **Backend:** any Python host (Render, Railway, Fly.io) or Docker. `backend/Dockerfile` runs `uvicorn` on `$PORT`. Set the backend env vars, with `FRONTEND_URL` set to your frontend URL.
-- **Frontend:** Vercel or Netlify (root directory `web`, build `npm run build`, output `dist`). SPA rewrites are included (`vercel.json`, `public/_redirects`). Set `VITE_API_URL` to the backend URL.
-- Add your production `/login` URL to Supabase Redirect URLs and rebuild the extension with both production URLs.
+## Deploy on Vercel (recommended)
+Create **two Vercel projects from this same GitHub repo** at [vercel.com/new](https://vercel.com/new). Enter keys only in the Vercel dashboard (Project → Settings → Environment Variables).
+
+**1. API project (FastAPI)**
+- Import the repo and set **Root Directory** to `backend`. Vercel detects Python and runs `index.py` (configured in `backend/vercel.json`).
+- Environment variables: `OPENROUTER_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `FRONTEND_URL`. `FRONTEND_URL` is your web URL; separate several with commas, for example production and preview.
+- **Supabase is required here.** Vercel functions are serverless, so the in-memory fallback resets between requests and the 5-refinement guest limit would not hold.
+- After deploying, check `https://<api-project>.vercel.app/health`.
+
+**2. Web project (React)**
+- Import the repo again and set **Root Directory** to `web`. Vercel detects Vite and reads `web/vercel.json`, which handles SPA routing.
+- Environment variables: `VITE_API_URL=https://<api-project>.vercel.app`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
+- Then add the web URL to the API project's `FRONTEND_URL` and redeploy the API.
+
+**3. Supabase:** in Auth → URL Configuration, set Site URL to the web URL and add `https://<web-project>.vercel.app/login` to Redirect URLs.
+
+**4. Extension:** rebuild it against production:
+```bash
+cd extension && PROMPTLY_API_BASE=https://<api-project>.vercel.app PROMPTLY_SITE_BASE=https://<web-project>.vercel.app npm run build
+```
+
+## Other hosts
+- **Backend:** any Python host (Render, Railway, Fly.io) or Docker. `backend/Dockerfile` runs `uvicorn` on `$PORT`.
+- **Frontend:** Netlify also works (root `web`, build `npm run build`, output `dist`; `public/_redirects` handles SPA routing).
 
 ## Adding the paid version later
 1. Set limits in `backend/app/plans.py`, e.g. `free` → `daily=30` and `pro` → `daily=None`. Pro could also use a better paid model.
