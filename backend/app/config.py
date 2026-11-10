@@ -3,13 +3,17 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+# OpenRouter rejects requests whose `models` fallback list has more than 3 entries.
+MAX_MODELS = 3
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # OpenRouter
     openrouter_api_key: str = ""
-    openrouter_model: str = "meta-llama/llama-3.3-70b-instruct:free"
-    openrouter_fallback_models: str = ""
+    openrouter_model: str = "google/gemma-4-31b-it:free"
+    openrouter_fallback_models: str = "nvidia/nemotron-3.5-super-vl:free,openrouter/free"
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
 
     # Supabase (leave empty for local mode: no login, in-memory usage)
@@ -34,7 +38,8 @@ class Settings(BaseSettings):
     @property
     def models(self) -> list[str]:
         fallbacks = [m.strip() for m in self.openrouter_fallback_models.split(",") if m.strip()]
-        return [self.openrouter_model] + [m for m in fallbacks if m != self.openrouter_model]
+        ordered = list(dict.fromkeys([self.openrouter_model, *fallbacks]))
+        return ordered[:MAX_MODELS]
 
 
 @lru_cache

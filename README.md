@@ -65,7 +65,7 @@ npm run build
 | Service | Variable | Purpose |
 |---|---|---|
 | backend | `OPENROUTER_API_KEY` | your OpenRouter key (secret) |
-| backend | `OPENROUTER_MODEL`, `OPENROUTER_FALLBACK_MODELS` | free models to use |
+| backend | `OPENROUTER_MODEL`, `OPENROUTER_FALLBACK_MODELS` | free models to use (OpenRouter accepts at most 3 in total: 1 main + 2 fallbacks) |
 | backend | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | login + usage DB (service key is secret) |
 | backend | `FRONTEND_URL` | allowed CORS origin(s), comma-separated |
 | backend | `EXTENSION_ID` | optional: only allow your published extension |

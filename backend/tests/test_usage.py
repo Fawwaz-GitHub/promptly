@@ -54,3 +54,10 @@ def test_parse_model_output():
     r = parse_model_output('```json\n{"improved":"Hello there.","changes":["Fixed grammar"]}\n```')
     assert r == {"improved": "Hello there.", "changes": ["Fixed grammar"]}
     assert parse_model_output("Just plain text")["improved"] == "Just plain text"
+
+
+def test_models_capped_at_three_for_openrouter():
+    from app.config import Settings
+
+    s = Settings(_env_file=None, openrouter_model="a:free", openrouter_fallback_models="b:free, a:free, c:free, d:free")
+    assert s.models == ["a:free", "b:free", "c:free"]

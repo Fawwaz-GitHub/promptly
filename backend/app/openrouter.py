@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 import httpx
@@ -60,7 +61,8 @@ async def refine_prompt(text: str, mode: str, settings: Settings, client: httpx.
     if res.status_code >= 400:
         if res.status_code == 429:
             raise UpstreamError("The free AI model is busy right now. Please try again in a moment.", 503)
-        raise UpstreamError(f"AI provider error ({res.status_code}) {res.text[:200]}")
+        logging.getLogger("promptly").error("OpenRouter %s: %s", res.status_code, res.text[:500])
+        raise UpstreamError(f"The AI provider returned an error ({res.status_code}). Please try again.")
 
     data = res.json()
     try:
