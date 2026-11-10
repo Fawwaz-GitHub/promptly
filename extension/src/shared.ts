@@ -55,8 +55,13 @@ export type Msg =
   | { type: "openLogin" };
 
 export async function getSettings(): Promise<Settings> {
-  const s = await chrome.storage.sync.get({ ...DEFAULT_SETTINGS } as Record<string, unknown>);
-  return { ...DEFAULT_SETTINGS, ...s } as Settings;
+  const { enabled, disabledSites, mode } = await chrome.storage.sync.get({
+    enabled: DEFAULT_SETTINGS.enabled,
+    disabledSites: DEFAULT_SETTINGS.disabledSites,
+    mode: DEFAULT_SETTINGS.mode,
+  });
+  // Server URLs are fixed at build time, so an old saved value can never point the extension at the wrong backend.
+  return { enabled, disabledSites, mode, apiBase: DEFAULT_API_BASE, siteBase: DEFAULT_SITE_BASE } as Settings;
 }
 
 export function siteEnabled(s: Settings, host: string) {

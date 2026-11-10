@@ -2,19 +2,50 @@
   "manifest_version": 3,
   "name": "Promptly — AI Prompt Improver",
   "short_name": "Promptly",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fix grammar and improve your AI prompts in any text box — ChatGPT, Claude, Gemini and more.",
-  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
-  "action": { "default_popup": "popup.html", "default_title": "Promptly", "default_icon": { "16": "icons/16.png", "48": "icons/48.png" } },
-  "background": { "service_worker": "background.js" },
-  "permissions": ["storage"],
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Promptly",
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
   "content_scripts": [
-    { "matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_idle", "all_frames": false }
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
   ],
   "commands": {
     "improve-prompt": {
-      "suggested_key": { "default": "Alt+Shift+P" },
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
       "description": "Improve the prompt in the focused text box"
     }
-  }
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ]
 }

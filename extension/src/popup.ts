@@ -13,9 +13,11 @@ async function currentHost(): Promise<string | null> {
 }
 
 function renderStatus(s: Settings, host: string | null) {
-  const on = s.enabled && (!host || !s.disabledSites.includes(host));
-  $("status").textContent = !s.enabled ? "Turned off" : on ? "Active on this page" : "Off on this site";
+  const on = s.enabled && !!host && !s.disabledSites.includes(host);
+  $("status").textContent = !s.enabled ? "Turned off" : !host ? "Not available on this page" : on ? "Active on this page" : "Off on this site";
+  $("siteHint").textContent = host ? "Enable on this site" : "Chrome doesn't allow extensions here";
   $("siteRow").classList.toggle("disabled", !s.enabled || !host);
+  $<HTMLInputElement>("siteEnabled").disabled = !s.enabled || !host;
 }
 
 async function loadAccount() {
@@ -45,16 +47,12 @@ async function loadAccount() {
   const enabled = $<HTMLInputElement>("enabled");
   const siteEnabled = $<HTMLInputElement>("siteEnabled");
   const mode = $<HTMLSelectElement>("mode");
-  const apiBase = $<HTMLInputElement>("apiBase");
-  const siteBase = $<HTMLInputElement>("siteBase");
 
   enabled.checked = s.enabled;
   $("siteName").textContent = host || "This page";
   siteEnabled.checked = !!host && !s.disabledSites.includes(host);
   mode.innerHTML = Object.entries(MODE_LABELS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
   mode.value = s.mode;
-  apiBase.value = s.apiBase;
-  siteBase.value = s.siteBase;
   renderStatus(s, host);
 
   enabled.addEventListener("change", async () => {
@@ -69,24 +67,6 @@ async function loadAccount() {
     renderStatus(s, host);
   });
   mode.addEventListener("change", () => chrome.storage.sync.set({ mode: mode.value as Mode }));
-  $("saveApi").addEventListener("click", async () => {
-    const parse = (el: HTMLInputElement) => {
-      try {
-        el.style.borderColor = "";
-        return new URL(el.value.trim()).origin;
-      } catch {
-        el.style.borderColor = "#c01d66";
-        return null;
-      }
-    };
-    const api = parse(apiBase);
-    const site = parse(siteBase);
-    if (!api || !site) return;
-    await chrome.storage.sync.set({ apiBase: api, siteBase: site });
-    apiBase.value = api;
-    siteBase.value = site;
-    loadAccount();
-  });
   $("login").addEventListener("click", () => chrome.runtime.sendMessage({ type: "openLogin" }));
   $("signout").addEventListener("click", async () => {
     await chrome.runtime.sendMessage({ type: "signout" });

@@ -208,7 +208,6 @@ export default function EditorPage() {
               ]}
               onChange={setView}
             />
-            {result && <span className="ml-auto truncate rounded-full bg-ink-50 px-2.5 py-1 text-xs font-semibold text-ink-700">{result.model}</span>}
           </div>
 
           <div className="flex-1 px-5 py-4">

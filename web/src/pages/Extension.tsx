@@ -83,7 +83,15 @@ export default function Extension() {
           </motion.p>
         )}
 
-        <p className="mt-10 text-sm leading-relaxed text-ink-600">
+        <div className="mt-10 rounded-2xl border-2 border-bubble-200 bg-bubble-50 p-5 text-sm leading-relaxed text-ink-800">
+          <p className="font-bold text-ink-900">Updating from an older version?</p>
+          <p className="mt-1">
+            Remove the old Promptly in <code className={code}>chrome://extensions</code>, then load the new folder. If the sparkle button
+            doesn't show on a page that was already open, refresh that page once.
+          </p>
+        </div>
+
+        <p className="mt-6 text-sm leading-relaxed text-ink-600">
           Chrome may sometimes show a notice about developer-mode extensions. That's normal for extensions installed outside the Chrome Web Store, and you can dismiss it.
           To update, download the new zip, replace the folder, and click the reload icon on Promptly in <code className={code}>chrome://extensions</code>.
         </p>

@@ -64,7 +64,7 @@ async function handle(msg: Msg, sender: chrome.runtime.MessageSender): Promise<u
         if (status >= 400) return { ok: false, error: data.error || "error", message: data.message || `Error ${status}`, usage: data.usage } satisfies RefineResult;
         return { ok: true, ...data } satisfies RefineResult;
       } catch {
-        return { ok: false, error: "network", message: `Can't reach the Promptly API at ${settings.apiBase}. Is the backend running?` } satisfies RefineResult;
+        return { ok: false, error: "network", message: "Can't reach Promptly right now. Check your connection and try again." } satisfies RefineResult;
       }
     }
     case "me": {
@@ -101,8 +101,20 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
   if (command === "improve-prompt" && tab?.id) chrome.tabs.sendMessage(tab.id, { type: "shortcut" }).catch(() => {});
 });
 
+/** Tabs opened before install/update have no content script yet; add it so Promptly works without a refresh. */
+async function injectIntoOpenTabs() {
+  const tabs = await chrome.tabs.query({ url: ["http://*/*", "https://*/*"] });
+  await Promise.all(
+    tabs.map((t) =>
+      t.id ? chrome.scripting.executeScript({ target: { tabId: t.id, allFrames: true }, files: ["content.js"] }).catch(() => {}) : null,
+    ),
+  );
+}
+
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   await deviceId();
+  await chrome.storage.sync.remove(["apiBase", "siteBase"]); // drop URLs saved by older versions
+  await injectIntoOpenTabs();
   if (reason === "install") {
     const { siteBase } = await getSettings();
     chrome.tabs.create({ url: `${siteBase}/app?welcome=extension` }).catch(() => {});

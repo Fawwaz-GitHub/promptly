@@ -15,11 +15,11 @@
 
   <section class="card">
     <label class="row">
-      <span><b>Promptly</b><small>Show the ✨ button in text boxes</small></span>
+      <span><b>Promptly</b><small>Show the sparkle button in text boxes</small></span>
       <input type="checkbox" id="enabled" class="switch" />
     </label>
     <label class="row" id="siteRow">
-      <span><b id="siteName">This site</b><small>Enable on this site</small></span>
+      <span><b id="siteName">This site</b><small id="siteHint">Enable on this site</small></span>
       <input type="checkbox" id="siteEnabled" class="switch" />
     </label>
     <label class="row">
@@ -37,16 +37,6 @@
     </div>
   </section>
 
-  <details>
-    <summary>Advanced</summary>
-    <label class="field">API URL (FastAPI backend)
-      <input id="apiBase" type="url" placeholder="https://api.your-domain.com" />
-    </label>
-    <label class="field">Website URL
-      <input id="siteBase" type="url" placeholder="https://your-domain.com" />
-    </label>
-    <button id="saveApi" class="btn">Save</button>
-  </details>
 
   <footer><a id="openApp" href="#">Open web editor ↗</a><span>Alt+Shift+P</span></footer>
   <script src="popup.js"></script>
