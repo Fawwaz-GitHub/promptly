@@ -38,13 +38,13 @@ H = {"X-Device-Id": "testdevice01"}
 
 
 def test_refine_then_limit(client):
-    for i in range(5):
+    for i in range(2):
         r = client.post("/api/refine", json={"text": "write me email for boss i want leave"}, headers=H)
         assert r.status_code == 200, r.text
         d = r.json()
         assert d["improved"].startswith("Write a polite")
         assert d["changes"] == ["Fixed grammar"]
-        assert d["usage"]["remaining"] == 4 - i
+        assert d["usage"]["remaining"] == 1 - i
     r = client.post("/api/refine", json={"text": "another prompt"}, headers=H)
     assert r.status_code == 402
     assert r.json()["error"] == "limit_reached"
@@ -67,3 +67,13 @@ def test_cors_for_extension_and_frontend(client):
         assert r.headers.get("access-control-allow-origin") == origin
     r = client.options("/api/refine", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
     assert "access-control-allow-origin" not in r.headers
+
+
+def test_swagger_documents_routes_and_headers(client):
+    spec = client.get("/openapi.json").json()
+    refine = spec["paths"]["/api/refine"]["post"]
+    assert refine["requestBody"]["content"]["application/json"]["schema"]["properties"]["text"]
+    assert any(p["name"] == "X-Device-Id" for p in refine["parameters"])
+    assert "HTTPBearer" in spec["components"]["securitySchemes"]
+    assert client.get("/docs").status_code == 200
+    assert {p["id"]: p for p in client.get("/api/plans").json()}["free"]["daily"] == 5

@@ -1,7 +1,7 @@
 """Single source of truth for usage limits.
 
 To launch a paid tier later:
-  1. Set a limit for "free" (e.g. daily=20) and keep "pro" unlimited (or vice versa).
+  1. Guests get 2 refinements ever; signed-in Free users get 5 per UTC day. Keep "pro" unlimited.
   2. Set profiles.plan = 'pro' from a Stripe webhook.
 Nothing else in the code needs to change.
 """
@@ -20,7 +20,7 @@ class PlanLimits:
 
 
 PLANS: dict[str, PlanLimits] = {
-    "anonymous": PlanLimits(lifetime=5, daily=None, max_chars=4000, label="Guest"),
-    "free": PlanLimits(lifetime=None, daily=None, max_chars=4000, label="Free"),
+    "anonymous": PlanLimits(lifetime=2, daily=None, max_chars=4000, label="Guest"),
+    "free": PlanLimits(lifetime=None, daily=5, max_chars=4000, label="Free"),
     "pro": PlanLimits(lifetime=None, daily=None, max_chars=12000, label="Pro"),
 }

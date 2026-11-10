@@ -23,7 +23,7 @@ async function loadAccount() {
   const usageEl = $("usage");
   if (!me || me.error) {
     usageEl.textContent = "Can't reach the Promptly server.";
-    usageEl.style.color = "#e11d48";
+    usageEl.style.color = "#c01d66";
     return;
   }
   const u: Usage = me.usage;
@@ -75,7 +75,7 @@ async function loadAccount() {
         el.style.borderColor = "";
         return new URL(el.value.trim()).origin;
       } catch {
-        el.style.borderColor = "#e11d48";
+        el.style.borderColor = "#c01d66";
         return null;
       }
     };

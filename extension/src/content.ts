@@ -70,9 +70,9 @@ shadow.innerHTML = `
 <style>
   * { box-sizing: border-box; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .badge { position: fixed; display: none; align-items: center; gap: 4px; height: 28px; padding: 0 10px 0 8px;
-    border-radius: 999px; border: none; cursor: pointer; background: #6a45f5; color: #fff; font-size: 12px; font-weight: 600; line-height: 1;
+    border-radius: 999px; border: none; cursor: pointer; background: #ff6fae; color: #0a1f5c; font-size: 12px; font-weight: 600; line-height: 1;
     box-shadow: 0 4px 14px rgba(106,69,245,.35); transition: transform .12s, opacity .12s; }
-  .badge:hover { transform: translateY(-1px); background: #5932d9; }
+  .badge:hover { transform: translateY(-1px); background: #ff8fc0; }
   .badge.busy svg { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .panel { position: fixed; display: none; width: 380px; max-width: calc(100vw - 24px); max-height: 60vh; overflow: hidden;
@@ -85,13 +85,13 @@ shadow.innerHTML = `
   .body { padding: 12px; overflow: auto; }
   .improved { white-space: pre-wrap; word-break: break-word; }
   .changes { margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid #f1f5f9; list-style: none; color: #475569; font-size: 13px; }
-  .changes li::before { content: "✓ "; color: #7c5cff; }
+  .changes li::before { content: "✓ "; color: #ff6fae; }
   .err { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; border-radius: 10px; padding: 10px; }
   .foot { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid #f1f5f9; }
   .meta { font-size: 12px; color: #94a3b8; margin-right: auto; }
   .btn { border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #0f172a; }
-  .btn.primary { background: #6a45f5; border-color: #6a45f5; color: #fff; }
-  .btn.primary:hover { background: #5932d9; }
+  .btn.primary { background: #ff6fae; border-color: #ff6fae; color: #0a1f5c; }
+  .btn.primary:hover { background: #ff8fc0; }
   .sk { height: 10px; border-radius: 4px; background: #f1f5f9; margin: 8px 0; animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .5; } }
 </style>
@@ -169,7 +169,7 @@ function render(res: RefineResult) {
     body.innerHTML = `<div class="err">${esc(res.message)}</div>`;
     foot.innerHTML =
       res.error === "limit_reached" || res.error === "session_expired"
-        ? `<span class="meta">Free & unlimited with email</span><button class="btn primary" data-act="login">Sign in</button>`
+        ? `<span class="meta">Free with email: 5 a day</span><button class="btn primary" data-act="login">Sign in</button>`
         : `<span class="meta"></span><button class="btn" data-act="retry">Try again</button>`;
     return;
   }

@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from .config import get_settings
 from .deps import AuthError
@@ -27,7 +27,23 @@ def create_app() -> FastAPI:
             "Running on Vercel without Supabase: usage limits are kept in memory and reset "
             "between serverless invocations. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
         )
-    app = FastAPI(title="Promptly API", version="0.2.0", lifespan=lifespan)
+    app = FastAPI(
+        title="Promptly API",
+        version="0.3.0",
+        description=(
+            "Backend for **Promptly**, which improves AI prompts with free OpenRouter models.\n\n"
+            "**Limits:** guests get **2** refinements in total, identified by the `X-Device-Id` header. "
+            "Signed-in users get **5 per day**, sent as `Authorization: Bearer <Supabase access token>`.\n\n"
+            "To try it here, open `POST /api/refine`, click **Try it out**, and fill in `X-Device-Id` with any 8+ character id."
+        ),
+        openapi_tags=[
+            {"name": "Refine", "description": "Prompt improvement"},
+            {"name": "Account", "description": "Usage, plans and sessions"},
+            {"name": "System", "description": "Health checks"},
+        ],
+        swagger_ui_parameters={"defaultModelsExpandDepth": 0, "tryItOutEnabled": True, "displayRequestDuration": True},
+        lifespan=lifespan,
+    )
 
     ext = re.escape(settings.extension_id) if settings.extension_id else "[a-p]{32}"
     app.add_middleware(
@@ -42,7 +58,11 @@ def create_app() -> FastAPI:
     async def _auth_error(_: Request, e: AuthError):
         return JSONResponse({"error": e.error, "message": e.message}, status_code=e.status)
 
-    @app.get("/health")
+    @app.get("/", include_in_schema=False)
+    async def root():
+        return RedirectResponse("/docs")
+
+    @app.get("/health", tags=["System"], summary="Health check")
     async def health():
         return {"ok": True, "auth": settings.supabase_enabled, "model": settings.openrouter_model}
 

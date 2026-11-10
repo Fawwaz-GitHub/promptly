@@ -12,11 +12,11 @@ def run(c):
     return asyncio.run(c)
 
 
-def test_anonymous_gets_exactly_five():
+def test_anonymous_gets_exactly_two():
     s = MemoryStore()
-    for i in range(1, 6):
+    for i in range(1, 3):
         ok, st = run(check_and_consume(anon, s))
-        assert ok and st.remaining == 5 - i
+        assert ok and st.remaining == 2 - i
     ok, st = run(check_and_consume(anon, s))
     assert not ok and st.remaining == 0
 
@@ -28,13 +28,14 @@ def test_refund_after_failure():
     assert run(get_status(anon, s)).used == 0
 
 
-def test_signed_in_free_is_unlimited():
+def test_signed_in_free_gets_five_per_day():
     s = MemoryStore()
-    for _ in range(50):
-        ok, _ = run(check_and_consume(user, s))
-        assert ok
+    for i in range(5):
+        ok, st = run(check_and_consume(user, s))
+        assert ok and st.remaining == 4 - i and st.period == "daily"
         run(s.log_event(user_id="u1", device_id=None, chars_in=1, model="m", mode="improve"))
-    assert run(get_status(user, s)).remaining is None
+    ok, st = run(check_and_consume(user, s))
+    assert not ok and st.remaining == 0
 
 
 def test_daily_limit_for_future_paid_tiers():

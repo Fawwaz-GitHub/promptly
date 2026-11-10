@@ -14,8 +14,8 @@ The browser and the extension only talk to the **backend**. The OpenRouter key n
 ## Plans & limits
 | Who | Limit |
 |---|---|
-| Guest (not signed in) | **5 refinements** total, per device |
-| Free (signed in with email) | **Unlimited** |
+| Guest (not signed in) | **2 refinements** total, per device |
+| Free (signed in with email) | **5 refinements per day** (UTC) |
 | Pro (future, paid) | configure in `backend/app/plans.py` |
 
 ## 1. Run the backend (port 8000)
