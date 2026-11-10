@@ -1,5 +1,9 @@
 declare const __API_BASE__: string;
+declare const __SITE_BASE__: string;
+/** FastAPI backend */
 export const DEFAULT_API_BASE = __API_BASE__;
+/** React website (login, editor) */
+export const DEFAULT_SITE_BASE = __SITE_BASE__;
 
 export type Mode = "improve" | "grammar" | "concise";
 export const MODE_LABELS: Record<Mode, string> = { improve: "Improve", grammar: "Grammar only", concise: "Concise" };
@@ -9,8 +13,9 @@ export interface Settings {
   disabledSites: string[];
   mode: Mode;
   apiBase: string;
+  siteBase: string;
 }
-export const DEFAULT_SETTINGS: Settings = { enabled: true, disabledSites: [], mode: "improve", apiBase: DEFAULT_API_BASE };
+export const DEFAULT_SETTINGS: Settings = { enabled: true, disabledSites: [], mode: "improve", apiBase: DEFAULT_API_BASE, siteBase: DEFAULT_SITE_BASE };
 
 export interface Auth {
   access_token: string;

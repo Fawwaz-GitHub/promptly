@@ -1,4 +1,3 @@
-"use client";
 import { diffWords } from "diff";
 
 export function Diff({ from, to }: { from: string; to: string }) {

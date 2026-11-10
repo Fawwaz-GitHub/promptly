@@ -1,9 +1,9 @@
-"use client";
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const url = import.meta.env.VITE_SUPABASE_URL;
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+export const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/\/$/, "");
 export const authEnabled = Boolean(url && anon && !url.includes("your-project"));
 
 let client: SupabaseClient | null = null;
@@ -75,14 +75,14 @@ function headers(session: Session | null): HeadersInit {
 }
 
 export async function refine(text: string, mode: string, session: Session | null): Promise<RefineResponse> {
-  const res = await fetch("/api/refine", { method: "POST", headers: headers(session), body: JSON.stringify({ text, mode }) });
+  const res = await fetch(`${API_URL}/api/refine`, { method: "POST", headers: headers(session), body: JSON.stringify({ text, mode }) });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(data.error || "error", data.message || "Something went wrong", data.usage);
   return data;
 }
 
 export async function fetchMe(session: Session | null): Promise<{ usage: Usage; signedIn: boolean; email: string | null }> {
-  const res = await fetch("/api/me", { headers: headers(session) });
+  const res = await fetch(`${API_URL}/api/me`, { headers: headers(session) });
   return res.json();
 }
 

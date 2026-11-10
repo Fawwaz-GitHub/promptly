@@ -46,6 +46,7 @@ async function loadAccount() {
   const siteEnabled = $<HTMLInputElement>("siteEnabled");
   const mode = $<HTMLSelectElement>("mode");
   const apiBase = $<HTMLInputElement>("apiBase");
+  const siteBase = $<HTMLInputElement>("siteBase");
 
   enabled.checked = s.enabled;
   $("siteName").textContent = host || "This page";
@@ -53,6 +54,7 @@ async function loadAccount() {
   mode.innerHTML = Object.entries(MODE_LABELS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
   mode.value = s.mode;
   apiBase.value = s.apiBase;
+  siteBase.value = s.siteBase;
   renderStatus(s, host);
 
   enabled.addEventListener("change", async () => {
@@ -68,14 +70,22 @@ async function loadAccount() {
   });
   mode.addEventListener("change", () => chrome.storage.sync.set({ mode: mode.value as Mode }));
   $("saveApi").addEventListener("click", async () => {
-    try {
-      const url = new URL(apiBase.value.trim());
-      await chrome.storage.sync.set({ apiBase: url.origin });
-      apiBase.value = url.origin;
-      loadAccount();
-    } catch {
-      apiBase.style.borderColor = "#e11d48";
-    }
+    const parse = (el: HTMLInputElement) => {
+      try {
+        el.style.borderColor = "";
+        return new URL(el.value.trim()).origin;
+      } catch {
+        el.style.borderColor = "#e11d48";
+        return null;
+      }
+    };
+    const api = parse(apiBase);
+    const site = parse(siteBase);
+    if (!api || !site) return;
+    await chrome.storage.sync.set({ apiBase: api, siteBase: site });
+    apiBase.value = api;
+    siteBase.value = site;
+    loadAccount();
   });
   $("login").addEventListener("click", () => chrome.runtime.sendMessage({ type: "openLogin" }));
   $("signout").addEventListener("click", async () => {
@@ -84,8 +94,8 @@ async function loadAccount() {
   });
   $("openApp").addEventListener("click", async (e) => {
     e.preventDefault();
-    const { apiBase } = await getSettings();
-    chrome.tabs.create({ url: `${apiBase}/app` });
+    const { siteBase } = await getSettings();
+    chrome.tabs.create({ url: `${siteBase}/app` });
   });
 
   loadAccount();

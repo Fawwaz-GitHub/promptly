@@ -1,6 +1,9 @@
 node_modules
-.next
 dist
 *.zip
+.env
 .env*.local
 *.tsbuildinfo
+.venv/
+__pycache__/
+.pytest_cache/

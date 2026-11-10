@@ -12,7 +12,7 @@ const host = location.host;
 
 // ---------- Session hand-off from the Promptly website ----------
 function listenForWebsiteAuth() {
-  if (location.origin !== new URL(settings.apiBase).origin) return;
+  if (location.origin !== new URL(settings.siteBase).origin) return;
   window.addEventListener("message", async (e) => {
     if (e.source !== window || e.data?.source !== "promptly-web" || e.data.type !== "PROMPTLY_AUTH") return;
     const res = await chrome.runtime.sendMessage({ type: "auth", payload: e.data.payload });
@@ -281,7 +281,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   currentMode = settings.mode;
   listenForWebsiteAuth();
   // Don't show the floating button on the Promptly website itself — it has its own editor.
-  if (location.origin === new URL(settings.apiBase).origin) return;
+  if (location.origin === new URL(settings.siteBase).origin) return;
   document.documentElement.appendChild(hostEl);
   // If a field is already focused when we load (e.g. autofocus on ChatGPT)
   const f = document.activeElement;

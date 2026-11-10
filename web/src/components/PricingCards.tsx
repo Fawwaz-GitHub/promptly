@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 const tiers = [
   {
@@ -48,7 +48,7 @@ export function PricingCards() {
           </ul>
           {t.cta ? (
             <Link
-              href={t.cta.href}
+              to={t.cta.href}
               className={`mt-6 rounded-lg px-4 py-2 text-center text-sm font-medium ${t.highlight ? "bg-brand-600 text-white hover:bg-brand-700" : "border border-slate-200 hover:bg-slate-50"}`}
             >
               {t.cta.label}

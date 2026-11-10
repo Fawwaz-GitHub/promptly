@@ -64,7 +64,7 @@ async function handle(msg: Msg, sender: chrome.runtime.MessageSender): Promise<u
         if (status >= 400) return { ok: false, error: data.error || "error", message: data.message || `Error ${status}`, usage: data.usage } satisfies RefineResult;
         return { ok: true, ...data } satisfies RefineResult;
       } catch {
-        return { ok: false, error: "network", message: `Can't reach Promptly at ${settings.apiBase}. Is the server running?` } satisfies RefineResult;
+        return { ok: false, error: "network", message: `Can't reach the Promptly API at ${settings.apiBase}. Is the backend running?` } satisfies RefineResult;
       }
     }
     case "me": {
@@ -77,9 +77,9 @@ async function handle(msg: Msg, sender: chrome.runtime.MessageSender): Promise<u
       }
     }
     case "auth": {
-      // Only accept a session that was handed over by a page on the configured Promptly site.
+      // Only accept a session that was handed over by a page on the configured Promptly website.
       const origin = sender.tab?.url ? new URL(sender.tab.url).origin : "";
-      if (origin !== new URL(settings.apiBase).origin) return { ok: false };
+      if (origin !== new URL(settings.siteBase).origin) return { ok: false };
       await chrome.storage.local.set({ auth: msg.payload });
       return { ok: true };
     }
@@ -87,7 +87,7 @@ async function handle(msg: Msg, sender: chrome.runtime.MessageSender): Promise<u
       await chrome.storage.local.remove("auth");
       return { ok: true };
     case "openLogin":
-      await chrome.tabs.create({ url: `${settings.apiBase}/login?ext=1` });
+      await chrome.tabs.create({ url: `${settings.siteBase}/login?ext=1` });
       return { ok: true };
   }
 }
@@ -104,7 +104,7 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   await deviceId();
   if (reason === "install") {
-    const { apiBase } = await getSettings();
-    chrome.tabs.create({ url: `${apiBase}/app?welcome=extension` }).catch(() => {});
+    const { siteBase } = await getSettings();
+    chrome.tabs.create({ url: `${siteBase}/app?welcome=extension` }).catch(() => {});
   }
 });
